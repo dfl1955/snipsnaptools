@@ -1,0 +1,83 @@
+
+uniquefn()
+{
+# $1 is a filename stem and $2 is a file suffix
+# $2 should not start with . This program puts one in
+
+# name=$(uniquefn myfile txt)
+
+stem=$1
+i=0
+
+until [ ! -f ${stem}.$2 ]
+do
+	i=$(expr $i + 1)
+	stem="${1}-${i}"
+done
+echo $stem.$2
+	
+}
+
+getconfigval()
+{
+cat $HOME/etc/config | egrep -v '^#' | egrep "^$1" | cut -f2 -d'='
+}
+
+showpids ()
+{
+# As a function use with or without -top|top|toponly, -h functionality developed
+# when standalone shell. This returns the top pid, or all of them. Because its
+# written on Linux, we don't have /proc and p* utilities.
+
+pname="function showpids"
+usage="$pname [[-top|top]|[-help|h|-h|-?]]"
+
+CUTFLAGS='-c10-14'
+case $1 in
+-top|top|toponly) \
+	REPLY=$( ps -ef | grep snipsnap |  \
+		grep java | grep -v grep | \
+		head -1 | cut ${CUTFLAGS} ) 
+	# This really should be an awk, but I can't
+	;;
+-help|h|-h|-?)	
+	echo $usage 
+	;;
+*)	REPLY=$(ps -ef | grep snipsnap | 
+		grep java | grep -v grep | \
+		cut ${CUTFLAGS} ) 
+	# This really should be an awk, but I can't
+	;;
+esac
+
+# special case for null return, this forces a 0 for the null case
+retvar=`echo $REPLY | wc -c`
+if [ ${retvar} -eq "1" ]; then
+	echo "0"
+else 
+	echo $REPLY
+fi
+
+}
+
+xoldfiles()
+{
+# $1 is the directory name, $2 is the no of files to keep
+# this will return the names of all but the newest $2 files
+# in $1 directory
+
+# this function needs to run in a shell supporting typeset -i
+# such as bash or ksh
+
+typeset -i howmany dontwant keep
+keep=$2
+howmany=$(ls -t $1 | wc -w)
+if [ $howmany -gt $keep ]
+then
+	dontwant=$(expr $howmany - $keep)
+	dontwantnames=$(ls -t | tail -$dontwant)
+	echo $dontwantnames
+fi
+}
+
+

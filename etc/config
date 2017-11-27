@@ -1,0 +1,7 @@
+WRITTEN=Sun Aug 15 22:49:57 BST 2010
+#
+SNIPSNAP_HOME=/home/snipsnap
+JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun/jre
+BACKUPS=/home/snipsnap/backups
+EXPORT_PFX=dflwu9.info
+HISTORY=/home/snipsnap/archives

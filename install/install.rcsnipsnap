@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# needs to run as root
+
+update-rc.d -f rc.snipsnap remove 
+update-rc.d rc.snipsnap start 98 2 3 4 5 . stop 95 0 1 6 .
+
+find /etc  -name "*rc.snipsnap*"
